@@ -134,7 +134,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    // // SystemChrome.setEnabledSystemUIOverlays([]);
+    // SystemChrome.setEnabledSystemUIMode([[{}]]);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[100],
