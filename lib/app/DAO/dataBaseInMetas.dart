@@ -40,6 +40,12 @@ Future SalvarUsuario(
   int saldo,
 ) async {
   final Database db = await getDatabase();
+  print(toMap(
+    uuid,
+    nome,
+    senha,
+    saldo,
+  ));
   await db.insert(
     "USUARIO",
     toMap(
@@ -60,34 +66,3 @@ Map<String, dynamic> toMap(uuid, nome, saldo, senha) {
     'saldo': saldo,
   };
 }
-
-
-// class User {
-//   final int id;
-//   final String name;
-//   final String password;
-//   final String uuid;
-//   final double balance;
-//
-//   User({this.id, this.name, this.password, this.uuid, this.balance});
-//
-//   Map<String, dynamic> toMap() {
-//     return {
-//       'id': id,
-//       'name': name,
-//       'password': password,
-//       'uuid': uuid,
-//       'balance': balance,
-//     };
-//   }
-//
-//   static User fromMap(Map<String, dynamic> map) {
-//     return User(
-//       id: map['id'],
-//       name: map['name'],
-//       password: map['password'],
-//       uuid: map['uuid'],
-//       balance: map['balance'],
-//     );
-//   }
-// }

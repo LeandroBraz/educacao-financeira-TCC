@@ -13,7 +13,6 @@ import '../view/cadastroLogin.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
-
 }
 
 void _exibirMensagemDeErro(context) {
@@ -49,18 +48,20 @@ class _LoginPageState extends State<LoginPage> {
   void salvar() {
     setState(() {
       user.nome = nome.text.toString();
-      user.senha =  senha.text.toString();
+      user.senha = senha.text.toString();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       backgroundColor: Colors.purple[600],
       body: Form(
         key: _formKey,
         child: Container(
-
           padding: EdgeInsets.only(
             top: 60,
             left: 40,
@@ -180,26 +181,22 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   onPressed: () async {
-                   // print(_formKey.currentState);
+                    // print(_formKey.currentState);
                     if (_formKey.currentState!.validate()) {
-                        var valid = await Auths.loginAuths(nome.text.toString(), senha.text.toString());
-                     //  var usuario = await buscarLogin(nome.text.toString(), senha.text.toString());
+                      var valid = await Auths.loginAuths(
+                          nome.text.toString(), senha.text.toString());
+                      //  var usuario = await buscarLogin(nome.text.toString(), senha.text.toString());
 
-                         if(valid){
-                           user = Auths.currentUser;
-                           // user.nome = Auths.currentUser; usuario[0]["NOME"];
-                           // user.senha =  usuario[0]["SENHA"];
-                           // user.saldo =  usuario[0]["SALDO"];
-                           // user.uuid = usuario[0]["UUID"];
-                           print(user);
-                           Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ModuloSelecao(user)));
-                         }
-                         else{
-                           _exibirMensagemDeErro(context);
-                         }
+                      if (valid) {
+                        user = Auths.currentUser;
+                        print(user);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ModuloSelecao(user)));
+                      } else {
+                        _exibirMensagemDeErro(context);
+                      }
                     }
                   },
                 ),
@@ -217,12 +214,10 @@ class _LoginPageState extends State<LoginPage> {
                   textAlign: TextAlign.center,
                 ),
                 onPressed: () => {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Cadastro()))
-                    },
-                  ),
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => Cadastro()))
+                },
+              ),
             ),
           ]),
         ),

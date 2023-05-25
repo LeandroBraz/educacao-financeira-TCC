@@ -12,23 +12,92 @@ class Cadastro extends StatefulWidget {
   State<Cadastro> createState() => _CadastroState();
 }
 
+void _exibemensagemDeCadastro(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Cadastro Realizado"),
+        content: Text("Cadastro Realizado com sucesso"),
+        actions: [
+          TextButton(
+            child: Text("ir para Login"),
+            onPressed: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 class _CadastroState extends State<Cadastro> {
   final _formKey = GlobalKey<FormState>();
 
-  final nome = TextEditingController();
+  final TextEditingController nome = TextEditingController();
+  final TextEditingController senha = TextEditingController();
+  final TextEditingController confirmacaoSenha = TextEditingController();
 
-  final senha = TextEditingController();
+  void validarSenhas(context) {
+    String senhaDigitada = senha.text;
+    String confirmacaoDigitada = confirmacaoSenha.text;
 
-  void cadastrar() {
-    setState(() {
+    if (senhaDigitada == confirmacaoDigitada) {
+      cadastrar(context);
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("Senhas diferentes"),
+            actions: [
+              TextButton(
+                  child: Text("ok"),
+                  onPressed: () {
+                    print("senha");
+                  }),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void cadastrar(context) {
+    setState(() async {
       Uuid uuid = Uuid();
       String myUuid = uuid.v4();
-      SalvarUsuario(
-        myUuid,
-        nome.text.toString(),
-        senha.text.toString(),
-        0,
-      );
+      try {
+        await SalvarUsuario(
+          myUuid,
+          nome.text.toString(),
+          senha.text.toString(),
+          0,
+        );
+        _exibemensagemDeCadastro(context);
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(
+                  "Cadastro não Realizado, ocorreu um problema com os dados"),
+              actions: [
+                TextButton(
+                    child: Text("ok"),
+                    onPressed: () {
+                      print("");
+                    }),
+              ],
+            );
+          },
+        );
+      }
+      ;
     });
   }
 
@@ -85,6 +154,23 @@ class _CadastroState extends State<Cadastro> {
             SizedBox(
               height: 40,
             ),
+            TextFormField(
+              controller: confirmacaoSenha,
+              keyboardType: TextInputType.text,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: "Confirmação de Senha",
+                labelStyle: TextStyle(
+                  color: Colors.black38,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                ),
+              ),
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              height: 40,
+            ),
             Container(
               height: 60,
               alignment: Alignment.centerLeft,
@@ -128,9 +214,7 @@ class _CadastroState extends State<Cadastro> {
                   onPressed: () {
                     print(_formKey.currentState);
                     if (_formKey.currentState!.validate()) {
-                      cadastrar();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      validarSenhas(context);
                     }
                   },
                 ),
